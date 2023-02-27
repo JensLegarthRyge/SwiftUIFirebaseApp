@@ -7,20 +7,13 @@
 
 import SwiftUI
 
-//Object that represents a note entry
-struct NoteEntry:Decodable, Encodable, Identifiable{
-    var id = UUID()
-    var title:String
-    var body:String
-}
-
 struct ContentView: View {
-    var fService = FirebaseService()
-    @State var noteEntries: [NoteEntry] = []
+    @ObservedObject var fService = FirebaseService()
+    
     //Visual representation
     var body: some View {
-        NavigationView{
-            VStack{
+        NavigationView {
+            VStack {
                 HStack(spacing: 200.0) {
                     EditButton()
                         .frame(width: 80, height: 30)
@@ -29,17 +22,21 @@ struct ContentView: View {
                         .cornerRadius(30)
                     Button("Add"){
                         fService.addNote(title: "New Note", body:"Preview")
-                        fService.startListener()
                     }.frame(width: 80, height: 30)
                     .background(Color.blue)
                     .foregroundColor(Color.white)
                     .cornerRadius(30)
                 }
-                List(noteEntries.indices, id: \.self) { index in
-                    NavigationLink(destination: DetailView(noteEntry: self.$noteEntries[index], noteEntries: $noteEntries)) {
-                        Text(self.noteEntries[index].title)
+                List($fService.notesColl){item in
+                    NavigationLink(destination: DetailViewDemo(note: item)){
+                        Text(item.title.wrappedValue)
                     }
+
                 }
+            }.onAppear(){
+                fService.startListener()
+                fService.uploadImage()
+                fService.downloadImage()
             }
         }
     }

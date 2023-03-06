@@ -13,12 +13,12 @@ import UIKit
 
 class FirebaseService: ObservableObject{
     private var db = Firestore.firestore() // holds the database object
-    //File storage
     private var storage = Storage.storage()
     private let notes = "notes"
     @Published var notesColl = [Note]()
+    private let hasImage = "hasImage"
     
-    func downloadImage(){
+    func readImage(){
         let imageRef = storage.reference(withPath: "mountain.jpeg")
         imageRef.getData(maxSize: 5000000){ data, error in
             if error == nil {
@@ -27,11 +27,10 @@ class FirebaseService: ObservableObject{
             } else{
                 print("ERROR: An error occured downloading image \(error.debugDescription)")
             }
-            
         }
     }
     
-    func uploadImage(){
+    func createImage(){
         if let img = UIImage(named:"mountain"){
             let data = img.jpegData(compressionQuality: 1.0)! //Forcefully unwrap
             let metaData = StorageMetadata()
@@ -47,7 +46,7 @@ class FirebaseService: ObservableObject{
         }
     }
     
-    func addNote(title:String, body:String){
+    func createNote(title:String, body:String){
         let doc = db.collection(notes).document() // creates a new empty document
         var data = [String:String]() // creates a new empty dictionary
         data["title"] = title
@@ -55,7 +54,7 @@ class FirebaseService: ObservableObject{
         doc.setData(data) // saves to Firestore.
     }
     
-    func startListener(){
+    func readNotes(){
         db.collection(notes).addSnapshotListener { snap, error in
             if let e = error {
                 print("An error occured while loading data \(e)")
@@ -63,8 +62,8 @@ class FirebaseService: ObservableObject{
                 if let snap = snap {
                     self.notesColl.removeAll()
                     for doc in snap.documents {
-                        if let body = doc.data()["body"] as? String, let title = doc.data()["title"] as? String {
-                            let note = Note(id:doc.documentID, title: title, body: body)
+                        if let body = doc.data()["body"] as? String, let title = doc.data()["title"] as? String, let hasImage = doc.data()[self.hasImage] as? Bool {
+                            let note = Note(id:doc.documentID, title: title, body: body, hasImage: hasImage)
                             self.notesColl.append(note)
                         }
                     }
@@ -73,4 +72,14 @@ class FirebaseService: ObservableObject{
         }
     }
     
+    func updateNote(noteToUpdate: Note) {
+        let referencedNote = db.collection(notes).document(noteToUpdate.id)
+        referencedNote.updateData(["title": noteToUpdate.title, "body": noteToUpdate.body]) { error in
+            if let error = error {
+                print("An error occurred while updating the note: \(error)")
+            } else {
+                print("Note updated successfully")
+            }
+        }
+    }
 }

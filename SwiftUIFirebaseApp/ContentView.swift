@@ -21,22 +21,20 @@ struct ContentView: View {
                         .foregroundColor(Color.white)
                         .cornerRadius(30)
                     Button("Add"){
-                        fService.addNote(title: "New Note", body:"Preview")
+                        fService.createNote(title: "New Note", body:"Preview")
                     }.frame(width: 80, height: 30)
                     .background(Color.blue)
                     .foregroundColor(Color.white)
                     .cornerRadius(30)
                 }
                 List($fService.notesColl){item in
-                    NavigationLink(destination: DetailViewDemo(note: item)){
+                    NavigationLink(destination: DetailViewDemo(displayedNote: item)){
                         Text(item.title.wrappedValue)
                     }
 
                 }
             }.onAppear(){
-                fService.startListener()
-                fService.uploadImage()
-                fService.downloadImage()
+                fService.readNotes()
             }
         }
     }

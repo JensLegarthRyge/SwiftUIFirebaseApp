@@ -18,39 +18,49 @@ class FirebaseService: ObservableObject{
     @Published var notesColl = [Note]()
     private let hasImage = "hasImage"
     
-    func readImage(){
-        let imageRef = storage.reference(withPath: "mountain.jpeg")
-        imageRef.getData(maxSize: 5000000){ data, error in
-            if error == nil {
-                let image = UIImage(data: data!)
-                print(image.debugDescription)
-            } else{
-                print("ERROR: An error occured downloading image \(error.debugDescription)")
-            }
-        }
-    }
-    
-    func createImage(){
-        if let img = UIImage(named:"mountain"){
-            let data = img.jpegData(compressionQuality: 1.0)! //Forcefully unwrap
+    func createImage(note:Note){
+        if let img = note.image{
+            let data = img.jpegData(compressionQuality: 1)!
+            let imageRef = storage.reference().child(note.id)
             let metaData = StorageMetadata()
             metaData.contentType = "image/jpeg"
-            let ref = storage.reference().child("mountain.jpeg")
-            ref.putData(data, metadata: metaData){meta, error in
-                if error == nil {
-                    print("OK: Uploading image...")
-                } else {
-                    print("ERROR: An error occured uploading image")
+            imageRef.putData(data, metadata: metaData) { meta, error in
+                if error != nil {
+                    print("An error occured uploading image: \(error.debugDescription)")
                 }
             }
         }
     }
     
+    func readImage(note: Note, completion: @escaping (UIImage?) -> Void){
+        let imageRef = storage.reference(withPath: note.id)
+        imageRef.getData(maxSize: 7000000){ data, error in
+            if error == nil {
+                completion(UIImage(data: data!))
+            }else{
+                print("An error occured downloading image: \(error.debugDescription)")
+            }
+        }
+    }
+    
+    func deleteImage(note:Note){
+        let imageRef = storage.reference().child(note.id)
+        imageRef.delete { error in
+            if error == nil {
+                print("deleted image \(note.id)")
+            } else {
+                print("failed to deleted image \(note.id) with error \(error.debugDescription)")
+            }
+        }
+    }
+
+    
     func createNote(title:String, body:String){
         let doc = db.collection(notes).document() // creates a new empty document
-        var data = [String:String]() // creates a new empty dictionary
+        var data = [String:Any]() // creates a new empty dictionary
         data["title"] = title
         data["body"] = body
+        data[hasImage] = false
         doc.setData(data) // saves to Firestore.
     }
     
@@ -73,8 +83,14 @@ class FirebaseService: ObservableObject{
     }
     
     func updateNote(noteToUpdate: Note) {
+        if noteToUpdate.image != nil{
+            createImage(note: noteToUpdate)
+        }
+        if !noteToUpdate.hasImage{
+            deleteImage(note: noteToUpdate)
+        }
         let referencedNote = db.collection(notes).document(noteToUpdate.id)
-        referencedNote.updateData(["title": noteToUpdate.title, "body": noteToUpdate.body]) { error in
+        referencedNote.updateData(["title": noteToUpdate.title, "body": noteToUpdate.body, "hasImage": noteToUpdate.hasImage]) { error in
             if let error = error {
                 print("An error occurred while updating the note: \(error)")
             } else {

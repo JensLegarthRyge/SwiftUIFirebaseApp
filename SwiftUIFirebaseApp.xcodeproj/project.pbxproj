@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		34269AB529B7226500650583 /* MapWrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34269AB429B7226500650583 /* MapWrap.swift */; };
 		34AECA73299B8A400069803C /* SwiftUIFirebaseAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AECA72299B8A400069803C /* SwiftUIFirebaseAppApp.swift */; };
 		34AECA75299B8A400069803C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AECA74299B8A400069803C /* ContentView.swift */; };
 		34AECA77299B8A410069803C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 34AECA76299B8A410069803C /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		34269AB429B7226500650583 /* MapWrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapWrap.swift; sourceTree = "<group>"; };
 		34AECA6F299B8A400069803C /* SwiftUIFirebaseApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIFirebaseApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34AECA72299B8A400069803C /* SwiftUIFirebaseAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIFirebaseAppApp.swift; sourceTree = "<group>"; };
 		34AECA74299B8A400069803C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -44,6 +46,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		34269AB629B723C800650583 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				34AECA8B299B94AB0069803C /* Note.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		34269AB729B723CE00650583 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				34AECA74299B8A400069803C /* ContentView.swift */,
+				34DC338829A4B9D80054EDC2 /* DetailViewDemo.swift */,
+				34269AB429B7226500650583 /* MapWrap.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		34269AB829B723D300650583 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				34AECA87299B8B310069803C /* FirebaseService.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		34AECA66299B8A400069803C = {
 			isa = PBXGroup;
 			children = (
@@ -63,12 +91,11 @@
 		34AECA71299B8A400069803C /* SwiftUIFirebaseApp */ = {
 			isa = PBXGroup;
 			children = (
+				34269AB629B723C800650583 /* Model */,
+				34269AB729B723CE00650583 /* View */,
+				34269AB829B723D300650583 /* Controller */,
 				34AECA80299B8ACB0069803C /* GoogleService-Info.plist */,
 				34AECA72299B8A400069803C /* SwiftUIFirebaseAppApp.swift */,
-				34AECA74299B8A400069803C /* ContentView.swift */,
-				34AECA87299B8B310069803C /* FirebaseService.swift */,
-				34DC338829A4B9D80054EDC2 /* DetailViewDemo.swift */,
-				34AECA8B299B94AB0069803C /* Note.swift */,
 				34AECA76299B8A410069803C /* Assets.xcassets */,
 				34AECA78299B8A410069803C /* Preview Content */,
 			);
@@ -165,6 +192,7 @@
 				34AECA8C299B94AB0069803C /* Note.swift in Sources */,
 				34AECA75299B8A400069803C /* ContentView.swift in Sources */,
 				34AECA88299B8B310069803C /* FirebaseService.swift in Sources */,
+				34269AB529B7226500650583 /* MapWrap.swift in Sources */,
 				34AECA73299B8A400069803C /* SwiftUIFirebaseAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -297,6 +325,7 @@
 				DEVELOPMENT_TEAM = N65NK97U29;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "To upload pictures";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -326,6 +355,7 @@
 				DEVELOPMENT_TEAM = N65NK97U29;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "To upload pictures";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

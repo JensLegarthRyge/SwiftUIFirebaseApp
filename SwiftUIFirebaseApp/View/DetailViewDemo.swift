@@ -29,34 +29,43 @@ struct DetailViewDemo: View {
                 .resizable()
                 .frame(width: 250, height: 250)
                 .padding(.bottom, 30)
-            HStack(spacing: 100){
+            HStack(spacing: 40){
                 PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
                     Text("Select photo")
                 }
                 Button("Save note"){
                     firebaseService.updateNote(noteToUpdate: displayedNote)
                 }
+                Button("Delete Photo"){
+                    firebaseService.deleteImage(note: displayedNote)
+                    displayedNote.image = nil
+                    displayedNote.hasImage = false
+                    picture = nil
+                    firebaseService.updateNote(noteToUpdate: displayedNote)
+                }
             }
         }.onChange(of: selectedItem) { item in
             Task(priority: .background) {
-                print("image ready")
                 if let data = try? await item?.loadTransferable(type: Data.self){
                     displayedNote.image = UIImage(data: data)
                     picture = displayedNote.image
                     displayedNote.hasImage = true
+                    firebaseService.updateNote(noteToUpdate: displayedNote)
                 }
             }
         }.onAppear(){
             if displayedNote.hasImage{
-                //functionality that loads image into container
+                firebaseService.readImage(note: displayedNote){ imageFromFB in
+                    picture = imageFromFB
+                }
             }
         }
     }
-}
-
-struct DetailViewDemo_Previews: PreviewProvider {
-    static var previews: some View {
-        let previewNote = Note(id: "12", title:"Preview", body:"Preview", hasImage: false)
-        return DetailViewDemo(displayedNote:.constant(previewNote))
+    
+    struct DetailViewDemo_Previews: PreviewProvider {
+        static var previews: some View {
+            let previewNote = Note(id: "12", title:"Preview", body:"Preview", hasImage: false)
+            return DetailViewDemo(displayedNote:.constant(previewNote))
+        }
     }
 }

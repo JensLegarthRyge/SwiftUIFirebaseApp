@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var fService = FirebaseService()
+    @ObservedObject var firebaseService = FirebaseService()
     
     //Visual representation
     var body: some View {
@@ -21,20 +21,20 @@ struct ContentView: View {
                         .foregroundColor(Color.white)
                         .cornerRadius(30)
                     Button("Add"){
-                        fService.createNote(title: "New Note", body:"Preview")
+                        firebaseService.createNote(title: "New Note", body:"Preview")
                     }.frame(width: 80, height: 30)
                     .background(Color.blue)
                     .foregroundColor(Color.white)
                     .cornerRadius(30)
                 }
-                List($fService.notesColl){item in
+                List($firebaseService.notesColl){item in
                     NavigationLink(destination: DetailViewDemo(displayedNote: item)){
                         Text(item.title.wrappedValue)
                     }
 
                 }
             }.onAppear(){
-                fService.readNotes()
+                firebaseService.readNotes()
             }
         }
     }
